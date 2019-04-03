@@ -1,0 +1,9 @@
+unity/libunity.a
+tests/unity/libunity.a
+tests/log.c
+
+*.o
+*.so
+*.dylib
+
+.vscode/*
