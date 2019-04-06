@@ -11,7 +11,7 @@ void seahash_init(struct seahash_ctx *ctx)
     return;
 }
 
-void seahash_update(struct seahash_ctx *ctx, unsigned char const *buf, unsigned len)
+void seahash_update(struct seahash_ctx *ctx, const unsigned char *input, unsigned len)
 {
     return;
 }

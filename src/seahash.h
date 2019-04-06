@@ -9,14 +9,14 @@ struct seahash_ctx {
     uint64_t c;
     uint64_t d;
 
-    int8_t input_size;
-    int8_t buffer_size;
-    unsigned char in[SEAHASH_DIGEST_LENGTH];
+    size_t input_len;
+    size_t buffer_size;
+    unsigned char buffer[SEAHASH_DIGEST_LENGTH];
 } seahash_ctx;
 
 void seahash_init(struct seahash_ctx *ctx);
 
-void seahash_update(struct seahash_ctx *ctx, unsigned char const *buf, unsigned len);
+void seahash_update(struct seahash_ctx *ctx, const unsigned char *buf, unsigned len);
 
 void seahash_final(unsigned char digest[SEAHASH_DIGEST_LENGTH], struct seahash_ctx *ctx);
 
