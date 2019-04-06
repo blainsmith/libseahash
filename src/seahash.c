@@ -6,6 +6,45 @@
 
 #include "seahash.h"
 
+uint64_t read_block(const unsigned char *input, unsigned len)
+{
+    uint64_t block = 0;
+
+    if (len == SEAHASH_DIGEST_LENGTH)
+    {
+        block = (uint64_t)input[0] |
+                (uint64_t)input[1] << 8 |
+                (uint64_t)input[2] << 16 |
+                (uint64_t)input[3] << 24 |
+                (uint64_t)input[4] << 32 |
+                (uint64_t)input[5] << 40 |
+                (uint64_t)input[6] << 48 |
+                (uint64_t)input[7] << 56;
+
+        return block;
+    }
+
+    while (len > 0)
+    {
+        len--;
+        block <<= 8;
+        block |= (uint64_t)input[len];
+    }
+
+    return block;
+}
+
+uint64_t diffuse(uint64_t in)
+{
+    in *= 0x6eed0e9da4d94a4f;
+    uint64_t a = in >> 32;
+    uint64_t b = in >> 60;
+    in ^= a >> b;
+    in *= 0x6eed0e9da4d94a4f;
+
+    return in;
+}
+
 void seahash_init(struct seahash_ctx *ctx)
 {
     return;
