@@ -45,6 +45,17 @@ uint64_t diffuse(uint64_t in)
     return in;
 }
 
+void update_state(struct seahash_ctx *ctx, uint64_t in)
+{
+    uint64_t a = ctx->a;
+    a = diffuse(a ^ in);
+
+    ctx->a = ctx->b;
+    ctx->b = ctx->c;
+    ctx->c = ctx->d;
+    ctx->d = a;
+}
+
 void seahash_init(struct seahash_ctx *ctx)
 {
     return;
