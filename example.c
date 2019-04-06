@@ -10,4 +10,6 @@ int main(int argc, char **argv) {
     seahash_init(&context);
     seahash_update(&context, string, strlen(string));
     seahash_final(digest, &context);
+
+    printf("%s", digest);
 }
