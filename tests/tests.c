@@ -8,7 +8,7 @@
 int main(int argc, char **argv) {
     UNITY_BEGIN();
 
-    unsigned char digest[SEAHASH_DIGEST_LENGTH];
+    unsigned char digest[SEAHASH_DIGEST_LENGTH+1];
     const char *string = "to be or not to be";
 
     struct seahash_ctx context;
@@ -17,15 +17,17 @@ int main(int argc, char **argv) {
     seahash_final(digest, &context);
 
     for (uint8_t i = 0; i < SEAHASH_DIGEST_LENGTH; i++) {
-        printf("%x", digest[i]);
+        printf("0x%02x ", digest[i]);
     }
 
-    char result[20];
+    printf("\n\n");
+
+    unsigned char hash[SEAHASH_DIGEST_LENGTH+1];
     const char *str = "to be or not to be";
-    seahash(result, str, strlen(str));
+    seahash(hash, (const unsigned char *)str, strlen(str));
 
     for (uint8_t i = 0; i < SEAHASH_DIGEST_LENGTH; i++) {
-        printf("%x", result[i]);
+        printf("0x%02x ", hash[i]);
     }
 
     return UNITY_END();
