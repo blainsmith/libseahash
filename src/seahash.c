@@ -149,17 +149,17 @@ void seahash_final(unsigned char digest[SEAHASH_DIGEST_LENGTH], struct seahash_c
     return;
 }
 
-void seahash(char *hash, const char *str, int len)
+void seahash(unsigned char *hash, const unsigned char *str, int len)
 {
     struct seahash_ctx context;
 
     seahash_init(&context);
     for (int i = 0; i < len; i++)
     {
-        seahash_update(&context, (const unsigned char *)str, 1);
+        seahash_update(&context, str + i, 1);
     }
-    seahash_final((unsigned char *)hash, &context);
-    hash[19] = '\n';
+    seahash_final(hash, &context);
+    hash[SEAHASH_DIGEST_LENGTH] = '\0';
 
     return;
 }

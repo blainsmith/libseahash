@@ -20,6 +20,6 @@ void seahash_update(struct seahash_ctx *ctx, const unsigned char *buf, unsigned 
 
 void seahash_final(unsigned char digest[SEAHASH_DIGEST_LENGTH], struct seahash_ctx *ctx);
 
-void seahash(char *hash, const char *str, int len);
+void seahash(unsigned char *hash, const unsigned char *str, int len);
 
 #endif /* end _SEAHASH_H */
