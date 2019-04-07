@@ -9,7 +9,9 @@ I used the same conventions as the other C hashing libraries such as SHA1 and MD
 ## Example
 
 ```c
+#include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "src/seahash.h"
 
