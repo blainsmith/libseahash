@@ -74,7 +74,18 @@ void seahash_update(struct seahash_ctx *ctx, const unsigned char *input, unsigne
 
     if (ctx->buffer_size > 0)
     {
-        // To be implemented
+        size_t tmp = SEAHASH_DIGEST_LENGTH - ctx->buffer_size;
+        memcpy(ctx->buffer + ctx->buffer_size, input, len);
+        if (tmp > len) {
+            ctx->buffer_size += len;
+            return;
+        }
+
+        uint64_t block = read_block(ctx->buffer, SEAHASH_DIGEST_LENGTH);
+        update_state(ctx, block);
+
+        ctx->buffer_size = 0;
+        return;
     }
 
     while (len >= SEAHASH_DIGEST_LENGTH)
