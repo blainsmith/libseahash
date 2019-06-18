@@ -1,4 +1,4 @@
-# [WIP] libseahash
+# libseahash
 
 libseahash is a C library that implements SeaHash, a non-cryptographic hash function created by [http://ticki.github.io](http://ticki.github.io). This is a port of the Go library [here](https://github.com/blainsmith/seahash).
 
