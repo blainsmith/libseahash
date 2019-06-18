@@ -1,8 +1,10 @@
+#include <stdlib.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+
 
 #include "seahash.h"
 
@@ -75,7 +77,7 @@ void seahash_update(struct seahash_ctx *ctx, const unsigned char *input, unsigne
     if (ctx->buffer_size > 0)
     {
         size_t tmp = SEAHASH_DIGEST_LENGTH - ctx->buffer_size;
-        memcpy(ctx->buffer + ctx->buffer_size, input, len);
+        memcpy(ctx->buffer + ctx->buffer_size, input, tmp);
         if (tmp > len) {
             ctx->buffer_size += len;
             return;
@@ -85,7 +87,8 @@ void seahash_update(struct seahash_ctx *ctx, const unsigned char *input, unsigne
         update_state(ctx, block);
 
         ctx->buffer_size = 0;
-        return;
+        input = input + tmp;
+        len -= tmp;
     }
 
     while (len >= SEAHASH_DIGEST_LENGTH)
@@ -123,43 +126,49 @@ void seahash_final(unsigned char digest[SEAHASH_DIGEST_LENGTH], struct seahash_c
 
         final = diffuse((&ctxcpy)->a ^ (&ctxcpy)->b ^ (&ctxcpy)->c ^ (&ctxcpy)->d ^ (uint64_t)ctx->input_len);
 
-        digest[7] = (unsigned char)(final);
-        digest[6] = (unsigned char)(final >> 8);
-        digest[5] = (unsigned char)(final >> 16);
-        digest[4] = (unsigned char)(final >> 24);
-        digest[3] = (unsigned char)(final >> 32);
-        digest[2] = (unsigned char)(final >> 40);
-        digest[1] = (unsigned char)(final >> 48);
-        digest[0] = (unsigned char)(final >> 56);
+        digest[0] = (unsigned char)(final);
+        digest[1] = (unsigned char)(final >> 8);
+        digest[2] = (unsigned char)(final >> 16);
+        digest[3] = (unsigned char)(final >> 24);
+        digest[4] = (unsigned char)(final >> 32);
+        digest[5] = (unsigned char)(final >> 40);
+        digest[6] = (unsigned char)(final >> 48);
+        digest[7] = (unsigned char)(final >> 56);
 
         return;
     }
 
     final = diffuse(ctx->a ^ ctx->b ^ ctx->c ^ ctx->d ^ (uint64_t)ctx->input_len);
 
-    digest[7] = (unsigned char)(final);
-    digest[6] = (unsigned char)(final >> 8);
-    digest[5] = (unsigned char)(final >> 16);
-    digest[4] = (unsigned char)(final >> 24);
-    digest[3] = (unsigned char)(final >> 32);
-    digest[2] = (unsigned char)(final >> 40);
-    digest[1] = (unsigned char)(final >> 48);
-    digest[0] = (unsigned char)(final >> 56);
+    digest[0] = (unsigned char)(final);
+    digest[1] = (unsigned char)(final >> 8);
+    digest[2] = (unsigned char)(final >> 16);
+    digest[3] = (unsigned char)(final >> 24);
+    digest[4] = (unsigned char)(final >> 32);
+    digest[5] = (unsigned char)(final >> 40);
+    digest[6] = (unsigned char)(final >> 48);
+    digest[7] = (unsigned char)(final >> 56);
 
     return;
 }
 
 void seahash(unsigned char *hash, const unsigned char *str, int len)
 {
+    char *c = malloc(2*sizeof(char));
+    c[1] = '\0';
+
     struct seahash_ctx context;
 
     seahash_init(&context);
     for (int i = 0; i < len; i++)
     {
-        seahash_update(&context, str + i, 1);
+        c[0] = str[i];
+        seahash_update(&context, (const unsigned char *)c, 1);
     }
     seahash_final(hash, &context);
     hash[SEAHASH_DIGEST_LENGTH] = '\0';
+
+    free(c);
 
     return;
 }
